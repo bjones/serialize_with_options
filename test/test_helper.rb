@@ -5,7 +5,6 @@ require 'rubygems'
 require 'active_record'
 require 'test/unit'
 require 'shoulda'
-require 'json'
 require 'serialize_with_options'
 ActiveRecord::Base.extend SerializeWithOptions
 

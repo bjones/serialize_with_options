@@ -74,7 +74,7 @@ class Review < ActiveRecord::Base
   belongs_to :reviewable, :polymorphic => true
 
   serialize_with_options do
-    includes :reviewable
+    includes :reviewable => User.serialization_configuration(:with_email)
   end
 end
 
@@ -187,9 +187,9 @@ class SerializeWithOptionsTest < Test::Unit::TestCase
 
     context "being converted to JSON" do
       setup do
-        @user_hash = JSON.parse(@user.to_json)["user"]
-        @post_hash = JSON.parse(@post.to_json)["post"]
-        @blog_post_hash = JSON.parse(@blog_post.to_json)["blog_post"]
+        @user_hash = ActiveSupport::JSON.decode(@user.to_json)["user"]
+        @post_hash = ActiveSupport::JSON.decode(@post.to_json)["post"]
+        @blog_post_hash = ActiveSupport::JSON.decode(@blog_post.to_json)["blog_post"]
       end
 
       should_serialize_with_options
@@ -216,7 +216,7 @@ class SerializeWithOptionsTest < Test::Unit::TestCase
       end
 
       should "find associations with multi-word names" do
-        user_hash = JSON.parse(@user.to_json(:with_check_ins))["user"]
+        user_hash = ActiveSupport::JSON.decode(@user.to_json(:with_check_ins))["user"]
         assert_equal @check_in.code_name, user_hash['check_ins'].first['code_name']
       end
 
